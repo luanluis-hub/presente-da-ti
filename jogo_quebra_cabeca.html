@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLICKBUM</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Adicionando Font Awesome para os ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 id="conteudo" class="game-title">
+    TENTE CLICAR N<span class="decoy-letter">O</span> BUM<span class="decoy-letter">B</span>UM D<span class="decoy-letter">O</span> ANBU PARA C<span class="decoy-letter">O</span>NCLUIR O DESAFI<span id="secret-letter-button" onclick="location.href='premio_clickbum.html'">O</span>
+</h2>
+
+<!-- 
+    INSTRUÇÃO:
+    Adicione a sua imagem com o nome "bumbum.png" na pasta do projeto.
+-->
+<img src="bumbum.png" onerror="this.onerror=null; this.src='img/bumbum.png';" alt="Imagem fugitiva" id="fugitive-image">
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    const fugitiveImage = document.getElementById('fugitive-image');
+
+    fugitiveImage.addEventListener('mouseover', () => {
+        const newX = Math.random() * (window.innerWidth - fugitiveImage.width);
+        const newY = Math.random() * (window.innerHeight - fugitiveImage.height);
+        fugitiveImage.style.left = `${newX}px`;
+        fugitiveImage.style.top = `${newY}px`;
+    });
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

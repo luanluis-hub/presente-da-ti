@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O que o Anbu acha?</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            margin: 2rem auto;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .question-box {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buttons-area {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-quiz {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+            width: 150px;
+        }
+
+        .btn-quiz:hover { transform: scale(1.05); }
+        
+        .btn-true { background-color: #2ecc71; box-shadow: 0 4px 0 #27ae60; }
+        .btn-false { background-color: #e74c3c; box-shadow: 0 4px 0 #c0392b; }
+
+        .btn-true:active, .btn-false:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 1.5em;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .score-indicator {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">O que o Anbu acha? 🤔</h2>
+
+<div class="quiz-container">
+    <div id="score-indicator" class="score-indicator">Pontos: 0 / 15</div>
+    <div id="level-indicator">Pergunta 1 de 15</div>
+    
+    <div class="question-box" id="question-text">Carregando...</div>
+    
+    <div class="buttons-area" id="buttons-area">
+        <button class="btn-quiz btn-true" onclick="checkAnswer(true)">Verdadeiro</button>
+        <button class="btn-quiz btn-false" onclick="checkAnswer(false)">Falso</button>
+    </div>
+
+    <div id="feedback-display" class="feedback"></div>
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    // Lista de perguntas (Verdadeiro ou Falso)
+    const questions = [
+        { text: "O Anbu acha que a Tisiku é a pessoa mais linda do mundo?", answer: true },
+        { text: "O Anbu prefere passar o Natal longe da Tisiku?", answer: false },
+        { text: "O Anbu acha que a Tisiku tem um sorriso perfeito?", answer: true },
+        { text: "O Anbu acha que filmes de terror são melhores sozinhos?", answer: false },
+        { text: "O Anbu acha que a Tisiku é muito inteligente?", answer: true },
+        { text: "O Anbu acha que a Tisiku cozinha mal?", answer: false },
+        { text: "O Anbu acha que a Tisiku é a melhor companhia?", answer: true },
+        { text: "O Anbu acha que a Tisiku deveria ganhar na loteria?", answer: true },
+        { text: "O Anbu acha que a Tisiku é chata?", answer: false },
+        { text: "O Anbu acha que o abraço da Tisiku é o melhor lugar do mundo?", answer: true },
+        { text: "O Anbu acha que a Tisiku canta mal no chuveiro?", answer: false }, // Polêmico kkk
+        { text: "O Anbu acha que a Tisiku merece o mundo?", answer: true },
+        { text: "O Anbu acha que a Tisiku é engraçada?", answer: true },
+        { text: "O Anbu acha que a Tisiku dorme demais?", answer: true }, // Talvez?
+        { text: "O Anbu acha que ama a Tisiku mais que tudo?", answer: true }
+    ];
+
+    // Embaralhar perguntas
+    questions.sort(() => Math.random() - 0.5);
+
+    let currentLevel = 0;
+    let score = 0;
+    const questionEl = document.getElementById('question-text');
+    const feedbackEl = document.getElementById('feedback-display');
+    const scoreEl = document.getElementById('score-indicator');
+    const levelEl = document.getElementById('level-indicator');
+    const buttonsArea = document.getElementById('buttons-area');
+
+    function loadQuestion() {
+        if (score >= 10) {
+            questionEl.textContent = "Você conhece muito bem o Anbu!";
+            buttonsArea.innerHTML = `<button class="botao-navegacao" onclick="location.href='premio_anbu.html'">Pegar Prêmio</button>`;
+            feedbackEl.textContent = "Parabéns! 🎉";
+            feedbackEl.style.color = "gold";
+            return;
+        }
+
+        if (currentLevel >= questions.length) {
+            // Acabaram as perguntas mas não fez 10 pontos (difícil acontecer com 15 perguntas, mas...)
+            questionEl.textContent = "Fim do Jogo!";
+            buttonsArea.style.display = 'none';
+            return;
+        }
+
+        questionEl.textContent = questions[currentLevel].text;
+        levelEl.textContent = `Pergunta ${currentLevel + 1} de ${questions.length}`;
+        feedbackEl.textContent = "";
+    }
+
+    function checkAnswer(userAnswer) {
+        const correctAnswer = questions[currentLevel].answer;
+        
+        if (userAnswer === correctAnswer) {
+            score++;
+            scoreEl.textContent = `Pontos: ${score} / ${questions.length}`;
+            feedbackEl.style.color = "#2ecc71";
+            feedbackEl.textContent = "Acertou! 😍";
+        } else {
+            feedbackEl.style.color = "#e74c3c";
+            feedbackEl.textContent = "Errou! 😢";
+        }
+
+        currentLevel++;
+        setTimeout(loadQuestion, 1000);
+    }
+
+    loadQuestion();
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

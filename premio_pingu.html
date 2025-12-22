@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prêmio do Pingu</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .premio-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #ecf0f1; /* Branco Gelo */
+            box-shadow: 0 0 20px #bdc3c7;
+            color: white;
+            font-family: "Mountains of Christmas", serif;
+            font-size: 1.6em;
+            line-height: 1.6;
+            height: 65vh;
+            overflow-y: auto;
+            text-align: justify;
+            backdrop-filter: blur(5px);
+        }
+        
+        .premio-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .premio-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .premio-container::-webkit-scrollbar-thumb {
+            background: #ecf0f1;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 id="titulo-premio" style="color: #ecf0f1; text-shadow: 0 0 10px white; margin-top: 20px; text-align: center;">Carregando...</h2>
+
+<div class="premio-container">
+    <p id="texto-premio">Carregando mensagem...</p>
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+<script>
+    fetch('premio_pingu.json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('titulo-premio').innerText = data.titulo;
+            document.getElementById('texto-premio').innerHTML = data.texto;
+        })
+        .catch(error => console.error('Erro ao carregar texto:', error));
+</script>
+</body>
+</html>

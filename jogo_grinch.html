@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pegueopingu</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Adicionando Font Awesome para os ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<!-- HUD do Jogo: Vidas e Tempo -->
+<div id="game-hud">
+    <div id="lives-container">
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-heart"></i>
+        <i class="fas fa-heart"></i>
+    </div>
+    <div id="timer-container">
+        <i class="fas fa-clock"></i>
+        <span id="timer">01:00</span>
+    </div>
+</div>
+
+<!-- Tela de Resultado (Vitória ou Derrota) -->
+<div id="game-result" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 300; background: rgba(0,0,0,0.8); padding: 40px; border-radius: 15px; border: 2px solid white; backdrop-filter: blur(5px);">
+    <h2 id="result-title" style="color: white; margin-bottom: 20px; font-size: 3em;"></h2>
+    <div id="result-buttons"></div>
+</div>
+
+<!-- Área do Jogo -->
+<div id="game-area">
+    <!-- 
+        INSTRUÇÃO:
+        A imagem "bumbum.png" já está sendo usada como jogador.
+        Você pode criar uma imagem "grinch.png" para o inimigo ou deixar o ícone.
+    -->
+    <img src="bumbum.png" rados dinamicamente pelo JavaScript -->
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    const player = document.getElementById('player');
+    const gameArea = document.getElementById('game-area');
+    const livesContainer = document.getElementById('lives-container');
+    const timerDisplay = document.getElementById('timer');
+
+    let lives = 3;
+    let timeLeft = 60;
+    let isInvincible = false;
+    let gameActive = true;
+
+    let enemies = [];
+    let enemySpawnInterval;
+    let timerInterval;
+
+    // --- Lógica para mover o jogador com o mouse ---
+    gameArea.addEventListener('mousemove', (e) => {
+        if (!gameActive) return;
+        const rect = gameArea.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        // Limita o movimento do jogador à área do jogo
+        x = Math.max(player.width / 2, Math.min(x, rect.width - player.width / 2));
+        y = Math.max(player.height / 2, Math.min(y, rect.height - player.height / 2));
+
+        player.style.left = `${x}px`;
+        player.style.top = `${y}px`;
+    });
+
+    // --- Lógica dos Inimigos ---
+    function spawnEnemy() {
+        const enemy = document.createElement('i');
+        enemy.className = 'fas fa-snowman enemy';
+        enemy.style.left = Math.random() * (gameArea.clientWidth - 40) + 'px';
+        enemy.style.top = '-50px';
+
+        // A velocidade aumenta conforme o tempo diminui
+        const timeProgress = (60 - timeLeft) / 60; // Vai de 0 a 1
+        const minSpeed = 4.5 + (timeProgress * 6.75); // Velocidade mínima começa em 4.5 e vai até 11.25
+        const maxSpeed = 9 + (timeProgress * 9); // Velocidade máxima começa em 9 e vai até 18
+        const speed = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+
+        enemies.push({ element: enemy, speed: speed });
+        gameArea.appendChild(enemy);
+    }
+
+    function updateEnemies() {
+        enemies.forEach((enemy, index) => {
+            const currentTop = parseFloat(enemy.element.style.top);
+            enemy.element.style.top = (currentTop + enemy.speed) + 'px';
+
+            // Remove inimigos que saíram da tela
+            if (currentTop > gameArea.clientHeight) {
+                enemy.element.remove();
+                enemies.splice(index, 1);
+            }
+        });
+    }
+
+    // --- Lógica de Colisão ---
+    function checkCollision() {
+        if (isInvincible) return;
+        const playerRect = player.getBoundingClientRect();
+
+        for (const enemy of enemies) {
+            const enemyRect = enemy.element.getBoundingClientRect();
+            if (
+                playerRect.left < enemyRect.right &&
+                playerRect.right > enemyRect.left &&
+                playerRect.top < enemyRect.bottom &&
+                playerRect.bottom > enemyRect.top
+            ) {
+                loseLife();
+                break; // Sai do loop após a primeira colisão
+            }
+        }
+    }
+
+    function loseLife() {
+        lives--;
+        isInvincible = true;
+        player.classList.add('hit');
+
+        const hearts = livesContainer.getElementsByClassName('fa-heart');
+        if (hearts.length > 0) {
+            hearts[hearts.length - 1].remove();
+        }
+
+        if (lives <= 0) {
+            gameOver();
+        } else {
+            setTimeout(() => {
+                isInvincible = false;
+                player.classList.remove('hit');
+            }, 1500);
+        }
+    }
+
+    // --- Lógica de Fim de Jogo ---
+    function stopGame() {
+        gameActive = false;
+        clearInterval(enemySpawnInterval);
+        clearInterval(timerInterval);
+        enemies.forEach(enemy => enemy.element.remove());
+        enemies = [];
+    }
+
+    function gameOver() {
+        stopGame();
+        showResult(false);
+    }
+
+    function winGame() {
+        stopGame();
+        showResult(true);
+    }
+
+    function showResult(isWin) {
+        const resultDiv = document.getElementById('game-result');
+        const title = document.getElementById('result-title');
+        const buttons = document.getElementById('result-buttons');
+        
+        resultDiv.style.display = 'block';
+        
+        if (isWin) {
+            title.textContent = "Você Ganhou!";
+            title.style.color = "gold";
+            buttons.innerHTML = `<button class="botao-navegacao" onclick="location.href='premio_pingu.html'">Pegar Prêmio</button>`;
+        } else {
+            title.textContent = "Game Over!";
+            title.style.color = "#e74c3c";
+            buttons.innerHTML = `<button class="botao-navegacao" onclick="location.reload()">Tentar Novamente</button>`;
+        }
+    }
+
+    // --- Lógica do Tempo ---
+    function updateTimer() {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const seconds = (timeLeft % 60).toString().padStart(2, '0');
+        timerDisplay.textContent = `${minutes}:${seconds}`;
+
+        if (timeLeft <= 0) {
+            winGame();
+        } else {
+            // Aumenta a frequência de inimigos com o tempo
+            const baseInterval = 178; // Era 267ms
+            const timeProgress = (60 - timeLeft) / 60;
+            const newInterval = baseInterval - (timeProgress * 143); // Intervalo diminui de ~178ms para ~35ms
+
+            clearInterval(enemySpawnInterval);
+            enemySpawnInterval = setInterval(spawnEnemy, newInterval);
+        }
+    }
+
+    // --- Loop e Início do Jogo ---
+    function gameLoop() {
+        if (!gameActive) return;
+        updateEnemies();
+        checkCollision();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function startGame() {
+        // Posiciona o jogador no meio
+        player.style.left = '50%';
+        player.style.top = '50%';
+        player.style.transform = 'translate(-50%, -50%)';
+
+        enemySpawnInterval = setInterval(spawnEnemy, 178); // Gera um inimigo a cada ~178ms (50% mais rápido novamente)
+        timerInterval = setInterval(updateTimer, 1000);
+        requestAnimationFrame(gameLoop);
+    }
+    
+    startGame();
+
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

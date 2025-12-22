@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Adicionando Font Awesome para o ícone da lâmpada -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Ajuste para a caixa de texto na segunda página */
+        .caixa {
+            height: auto; /* Permite que a altura se ajuste ao conteúdo */
+            min-height: 150px; /* Garante uma altura mínima */
+            padding: 25px; /* Adiciona mais espaço interno */
+            overflow-y: auto; /* Adiciona uma barra de rolagem se necessário */
+            font-size: 2.1em !important; /* Aumentado em 40% para melhor leitura */
+            align-items: flex-start; /* Alinha o texto no topo da caixa */
+            text-align: left; /* Alinha o texto à esquerda para facilitar a leitura */
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<!-- Presentes falsos espalhados -->
+<div class="scattered-presents">
+    <!-- O JavaScript vai preencher este espaço com 40 presentes -->
+</div>
+
+<!-- Caixa de mensagem escondida -->
+<div id="wrong-place-message" class="hidden-message-box">
+    <p>Esse n é o lugar certo, que pena!</p>
+    <button id="close-wrong-place-message" class="close-button">&times;</button>
+</div>
+
+<div class="caixa" id="conteudo"></div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='index.html'">Voltar</button>
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Próximo</button>
+</div>
+
+<script src="texto.js"></script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

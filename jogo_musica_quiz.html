@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qual é a Música?</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            margin: 2rem auto;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .quote-box {
+            font-size: 1.4rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            width: 80%;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-game {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            color: white;
+        }
+
+        .btn-game:hover { transform: scale(1.05); }
+        .btn-check { background-color: #28a745; }
+        .btn-hint { background-color: #ffc107; color: #333; }
+
+        .hint-text {
+            margin-top: 15px;
+            color: #ffc107;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 1.5em;
+        }
+
+        .score-indicator {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">Qual é a Música?</h2>
+
+<div class="quiz-container">
+    <div id="score-indicator" class="score-indicator">Pontos: 0 / 20</div>
+    <div id="level-indicator">Música 1 de 20</div>
+    <div class="quote-box">"Trecho da música aparecerá aqui"</div>
+    
+    <div class="input-area">
+        <input type="text" id="music-input" placeholder="Qual é o nome da música?">
+        
+        <div class="game-controls">
+            <button class="btn-game btn-hint" onclick="showHint()"><i class="fas fa-lightbulb"></i> Dica</button>
+            <button class="btn-game btn-check" onclick="checkAnswer()"><i class="fas fa-check"></i> Responder</button>
+        </div>
+    </div>
+
+    <div id="hint-display" class="hint-text"></div>
+    <div id="feedback-display" class="feedback"></div>
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    const songs = [
+        // Billie Eilish
+        { lyric: "I’m not your friend, or anything, damn / You think that you’re the man…", hint: "Música famosa por humilhar um ex que se achava o “cara perfeito” e virou meme no TikTok.", title: "Therefore I Am" },
+        { lyric: "What was I made for? / Taking a drive, I was an ideal…", hint: "Trilha do filme Barbie, fala sobre não saber qual é o seu propósito no mundo.", title: "What Was I Made For?" },
+        { lyric: "Isn’t it lovely, all alone? / Heart made of glass, my mind of stone…", hint: "Dueto triste sobre solidão e depressão, uma das mais conhecidas dela.", title: "Lovely" },
+        { lyric: "I’ve been watching you for some time / Can’t stop staring at those ocean eyes…", hint: "Primeiro grande hit da Billie, romântica e calma, falando dos olhos de alguém.", title: "Ocean Eyes" },
+        { lyric: "I want you to love me like I’m a hot ride…", hint: "Música sobre ciúmes, carência e querer ser prioridade.", title: "Watch" },
+
+        // Jão
+        { lyric: "Eu fui idiota por te amar desse jeito…", hint: "Hit mais famoso dele, sobre amar alguém que não retribui.", title: "Idiota" },
+        { lyric: "Eu sou o vilão dessa história…", hint: "Ele se coloca como o erro da própria história, cheio de ego e culpa.", title: "Vou Morrer Sozinho" },
+        { lyric: "A gente não dá certo junto…", hint: "Relacionamento que não funciona, mas terminar dói mais ainda.", title: "Essa Eu Fiz Pro Nosso Amor" },
+        { lyric: "E quando acontece, acontece…", hint: "Fala sobre sentimentos que surgem sem pedir permissão.", title: "Acontece" },
+        { lyric: "Me lambe, me morde…", hint: "Música intensa, sensual e caótica.", title: "Me Lambe" },
+
+        // Sabrina Carpenter
+        { lyric: "I’m working late, ’cause I’m a singer…", hint: "Pop chiclete de 2024, cheia de confiança e deboche.", title: "Espresso" },
+        { lyric: "Please, please, please don’t prove I’m right…", hint: "Ela implora para o cara não provar que ela estava certa sobre ele ser ruim.", title: "Please Please Please" },
+        { lyric: "I feel so much lighter like a feather…", hint: "Música sobre se sentir leve depois de superar alguém.", title: "Feather" },
+        { lyric: "Stupid, slow, useless… manchild", hint: "Ela chama o ex de imaturo a música inteira, com ironia.", title: "Lonesome" },
+        { lyric: "Now I’m a homewrecker, I’m a slut…", hint: "Resposta sarcástica às críticas e julgamentos da internet.", title: "Because I Liked A Boy" },
+
+        // JVKE
+        { lyric: "Oh, to be loved / To feel that way again…", hint: "Música lenta e emocional sobre o desejo simples de ser amado de verdade.", title: "Oh To Be Loved" },
+        { lyric: "You’re so pretty, it hurts…", hint: "Ele admira alguém, mas isso acaba machucando ele.", title: "Pretty" },
+        { lyric: "It’s golden hour somewhere…", hint: "Maior hit do JVKE, sobre um momento perfeito que você queria congelar.", title: "Golden Hour" },
+        { lyric: "I see her in everything I do…", hint: "Música sobre não conseguir esquecer alguém e ver essa pessoa em tudo.", title: "Her" },
+        { lyric: "She said she thinks she’s broken…", hint: "Inspirada em Coraline, fala de se sentir quebrado por dentro e perdido mentalmente.", title: "this is what sadness feels like" }
+    ];
+
+    // Embaralhar a ordem das músicas
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    shuffleArray(songs);
+
+    let currentLevel = 0;
+    let score = 0;
+    const quoteEl = document.querySelector('.quote-box');
+    const hintEl = document.getElementById('hint-display');
+    const feedbackEl = document.getElementById('feedback-display');
+    const inputEl = document.getElementById('music-input');
+    const levelEl = document.getElementById('level-indicator');
+    const scoreEl = document.getElementById('score-indicator');
+
+    function loadLevel() {
+        if (currentLevel >= songs.length) {
+            quoteEl.textContent = "Parabéns! Você completou todas!";
+            inputEl.style.display = 'none';
+            document.querySelector('.game-controls').style.display = 'none';
+            hintEl.style.display = 'none';
+            feedbackEl.textContent = "🎉";
+            return;
+        }
+        
+        const song = songs[currentLevel];
+        quoteEl.textContent = `"${song.lyric}"`;
+        hintEl.textContent = `Dica: ${song.hint}`;
+        hintEl.style.display = 'none';
+        feedbackEl.textContent = "";
+        inputEl.value = "";
+        levelEl.textContent = `Música ${currentLevel + 1} de ${songs.length}`;
+    }
+
+    function showHint() {
+        hintEl.style.display = 'block';
+    }
+
+    function winGame() {
+        quoteEl.textContent = "Você ganhou o prêmio Musical!";
+        feedbackEl.innerHTML = `
+            <p style="color: gold; margin-bottom: 20px;">Você atingiu ${score} pontos! 🎵</p>
+            <button class="botao-navegacao" onclick="location.href='premio_musica.html'">Pegar Prêmio</button>
+        `;
+        inputEl.style.display = 'none';
+        document.querySelector('.game-controls').style.display = 'none';
+        hintEl.style.display = 'none';
+        levelEl.style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const userAnswer = inputEl.value.trim().toLowerCase();
+        const correctAnswer = songs[currentLevel].title.toLowerCase();
+
+        if (userAnswer.length > 3 && correctAnswer.includes(userAnswer) || userAnswer === correctAnswer) {
+            score++;
+            scoreEl.textContent = `Pontos: ${score} / ${songs.length}`;
+
+            if (score >= 10) {
+                winGame();
+            } else {
+                feedbackEl.style.color = '#4caf50';
+                feedbackEl.textContent = "Correto! Próxima música...";
+                inputEl.disabled = true;
+                setTimeout(() => {
+                    currentLevel++;
+                    loadLevel();
+                    inputEl.disabled = false;
+                }, 1500);
+            }
+        } else {
+            feedbackEl.style.color = '#f44336';
+            feedbackEl.textContent = "Errado, tente novamente!";
+        }
+    }
+
+    inputEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    loadLevel();
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

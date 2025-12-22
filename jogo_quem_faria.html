@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Faria Isso?</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 700px;
+            width: 90%;
+            margin: 2rem auto;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .question-box {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 2.5rem;
+            color: #fff;
+            text-shadow: 1px 1px 3px black;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Mountains of Christmas", serif;
+            line-height: 1.4;
+        }
+
+        .options-area {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-option {
+            padding: 20px 40px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-option:hover { transform: scale(1.05); }
+        .btn-option:active { transform: scale(0.95); }
+        
+        .btn-anbu { background-color: #3498db; box-shadow: 0 5px 0 #2980b9; }
+        .btn-ti { background-color: #9b59b6; box-shadow: 0 5px 0 #8e44ad; }
+
+        .score-indicator {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #ffd700;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .result-text {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">Quem Faria Isso?</h2>
+
+<div class="quiz-container">
+    <div id="level-indicator" class="score-indicator">Situação 1 de 30</div>
+    
+    <div class="question-box" id="question-text">Carregando...</div>
+    
+    <div class="options-area" id="options-area">
+        <button class="btn-option btn-anbu" onclick="choose('Anbu')">
+            <i class="fas fa-clown"></i> Anbu 🤡 <span id="score-anbu">(0)</span>
+        </button>
+        <button class="btn-option btn-ti" onclick="choose('Ti')">
+            <i class="fas fa-dragon"></i> Ti 😈 <span id="score-ti">(0)</span>
+        </button>
+    </div>
+
+    <div id="result-display" class="result-text" style="display: none;"></div>
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    const questions = [
+        "Quem mandaria mensagem e se arrependeria imediatamente?",
+        "Quem abriria o chat só pra “dar uma olhada”?",
+        "Quem demoraria pra responder sem motivo nenhum?",
+        "Quem falaria “já vou” e demoraria 40 minutos?",
+        "Quem fingiria que não viu, mas viu?",
+        "Quem responderia seco sem perceber?",
+        "Quem mandaria áudio gigante sem avisar?",
+        "Quem começaria uma zoeira e depois falaria “era brincadeira”?",
+        "Quem sumiria e depois apareceria como se nada tivesse acontecido?",
+        "Quem leria tudo mas responderia só metade?",
+        "Quem é mais propício a soltar comentários ou piadas +18 do nada, sem contexto nenhum?",
+        "Quem falaria algo totalmente errado achando que tá certo?",
+        "Quem riria numa situação que claramente não era pra rir?",
+        "Quem começaria a explicar algo e se perderia no meio da frase?",
+        "Quem falaria “confia” sendo a pessoa menos confiável do momento?",
+        "Quem mandaria mensagem claramente entediado só pra causar?",
+        "Quem tem dificuldade real de tomar banho e sempre arruma desculpa? 🚿",
+        "Quem exageraria uma história simples em 300%?",
+        "Quem faria drama por absolutamente nada?",
+        "Quem age como se banho fosse um evento raro e cansativo? 🧼💀",
+        "Quem falaria “relaxa” e pioraria tudo?",
+        "Quem inventaria uma regra nova que só existe na própria cabeça?",
+        "Quem causaria confusão e sairia dizendo “não fui eu”?",
+        "Quem esqueceria algo óbvio e ainda discutiria que lembrou?",
+        "Quem falaria demais quando devia ficar quieto?",
+        "Quem ficaria quieto quando devia falar?",
+        "Quem tomaria a pior decisão possível com confiança?",
+        "Quem acha que passar perfume substitui banho? 😭",
+        "Quem começaria algo caótico e largaria no meio?",
+        "Quem faria o caos inteiro acontecer e depois perguntaria: “ué, o que aconteceu?”"
+    ];
+
+    let currentLevel = 0;
+    let votesAnbu = 0;
+    let votesTi = 0;
+
+    const questionEl = document.getElementById('question-text');
+    const levelEl = document.getElementById('level-indicator');
+    const optionsArea = document.getElementById('options-area');
+    const resultDisplay = document.getElementById('result-display');
+
+    function loadLevel() {
+        if (currentLevel >= questions.length) {
+            finishGame();
+            return;
+        }
+        
+        questionEl.textContent = questions[currentLevel];
+        levelEl.textContent = `Situação ${currentLevel + 1} de ${questions.length}`;
+    }
+
+    function choose(person) {
+        if (person === 'Anbu') {
+            votesAnbu++;
+            document.getElementById('score-anbu').textContent = `(${votesAnbu})`;
+        } else {
+            votesTi++;
+            document.getElementById('score-ti').textContent = `(${votesTi})`;
+        }
+
+        currentLevel++;
+        loadLevel();
+    }
+
+    function finishGame() {
+        questionEl.textContent = "Fim da Análise Caótica!";
+        optionsArea.style.display = 'none';
+        levelEl.style.display = 'none';
+        resultDisplay.style.display = 'block';
+        
+        let winner = votesTi > votesAnbu ? "Ti 😈" : "Anbu 🤡";
+        if (votesTi === votesAnbu) winner = "Empate (O Caos é Compartilhado!)";
+
+        resultDisplay.innerHTML = `
+            <p>Placar do Caos:</p>
+            <p>Anbu: ${votesAnbu} votos</p>
+            <p>Ti: ${votesTi} votos</p>
+            <br>
+            <p style="font-size: 1.8rem; color: gold;">Maior Culpado(a): ${winner}</p>
+            <br>
+            <button class="botao-navegacao" onclick="location.href='premio_quem_faria.html'">Pegar Prêmio</button>
+        `;
+    }
+
+    loadLevel();
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

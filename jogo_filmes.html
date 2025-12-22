@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivinhe o Filme</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            margin: 2rem auto;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .question-box {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .hint-text {
+            font-size: 1.1rem;
+            color: #ffd700;
+            font-style: italic;
+            display: none; /* Escondido inicialmente */
+            margin-top: 10px;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            width: 80%;
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-game {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            color: white;
+        }
+
+        .btn-game:hover { transform: scale(1.05); }
+        .btn-check { background-color: #28a745; }
+        .btn-hint { background-color: #ffc107; color: #333; }
+
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            min-height: 1.5em;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .score-indicator {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="theme-toggle-button"><i class="fas fa-lightbulb"></i></button>
+
+<h2 style="text-align: center; margin-top: 20px; color: var(--primary-color);">Adivinhe o Filme! 🎬</h2>
+
+<div class="quiz-container">
+    <div id="score-indicator" class="score-indicator">Pontos: 0 / 18</div>
+    <div id="level-indicator">Pergunta 1 de 18</div>
+    
+    <div class="question-box" id="question-text">
+        <span id="phrase-text">Carregando...</span>
+    </div>
+    
+    <div class="input-area" id="input-area">
+        <input type="text" id="movie-input" placeholder="Qual é o nome do filme?">
+        <div class="game-controls">
+            <button class="btn-game btn-hint" onclick="showHint()"><i class="fas fa-lightbulb"></i> Dica</button>
+            <button class="btn-game btn-check" onclick="checkAnswer()"><i class="fas fa-check"></i> Responder</button>
+        </div>
+    </div>
+
+    <div id="hint-text" class="hint-text"></div>
+
+    <div id="feedback-display" class="feedback"></div>
+</div>
+
+<div class="botoes-container">
+    <button class="botao-navegacao" onclick="location.href='pagina3.html'">Voltar aos Jogos</button>
+</div>
+
+<script>
+    const questions = [
+        { phrase: "Qual é o seu filme de terror favorito?", hint: "O assassino usa uma máscara de fantasma.", answer: "Pânico" },
+        { phrase: "O lado sombrio é mais rápido, mais fácil e mais sedutor.", hint: "Sabre de luz vermelho", answer: "Star Wars Ordem Sith" },
+        { phrase: "Ou você morre como herói ou vive o suficiente para virar vilão.", hint: "Coringa", answer: "Batman: O Cavaleiro das Trevas" },
+        { phrase: "Não podemos nos tocar, mas podemos nos amar.", hint: "Distância obrigatória", answer: "A 5 Passos de Você" },
+        { phrase: "Algumas pessoas entram na nossa vida como reação química.", hint: "Romance adolescente", answer: "A Química que Há Entre Nós" },
+        { phrase: "Ser estranho às vezes é o que salva o mundo.", hint: "Animação em stop-motion", answer: "ParaNorman" },
+        { phrase: "O silêncio é a única chance de sobreviver.", hint: "Assassino dentro da casa", answer: "Hush A Morte Ouve" },
+        { phrase: "Você fez minha vida mais bonita.", hint: "Jovens lidando com perdas", answer: "Por Lugares Incríveis" },
+        { phrase: "Eu sou a vingança.", hint: "Batman mais sombrio", answer: "Batman do Crepúsculo" },
+        { phrase: "O tamanho não define a coragem.", hint: "Mundo microscópico", answer: "Arthur e os Minimoys" },
+        { phrase: "Dois mundos, uma guerra.", hint: "Conclusão da trilogia", answer: "Arthur e a Guerra dos Dois Mundos" },
+        { phrase: "O mal nunca esquece uma derrota.", hint: "Maltazard", answer: "Arthur e a Vingança de Maltazard" },
+        { phrase: "Até a morte pode ser romântica.", hint: "Noiva do além", answer: "A Noiva Cadáver" },
+        { phrase: "Às vezes o amor desafia a morte.", hint: "Cachorro revive", answer: "Frankenweenie" },
+        { phrase: "Nós aceitamos o amor que achamos que merecemos.", hint: "Cartas e adolescência", answer: "As Vantagens de Ser Invisível" },
+        { phrase: "Você provavelmente acha que este mundo é um sonho que se tornou realidade. Mas você está enganada.", hint: "Olhos de botão", answer: "Coraline" },
+        { phrase: "Odeio não conseguir te odiar. Nem um pouco, nem mesmo por um segundo.", hint: "Poema na sala de aula", answer: "10 Coisas que Odeio em Você" },
+        { phrase: "O que é isso? O que é isso? Tem cor por toda parte!", hint: "Esqueleto descobre o Natal", answer: "O Estranho Mundo de Jack" }
+    ];
+
+    // Embaralhar a ordem das perguntas
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    shuffleArray(questions);
+
+    let currentLevel = 0;
+    let score = 0;
+    const phraseEl = document.getElementById('phrase-text');
+    const hintEl = document.getElementById('hint-text');
+    const feedbackEl = document.getElementById('feedback-display');
+    const levelEl = document.getElementById('level-indicator');
+    const scoreEl = document.getElementById('score-indicator');
+    const inputEl = document.getElementById('movie-input');
+    const inputArea = document.getElementById('input-area');
+
+    function loadLevel() {
+        // Verifica se já atingiu 10 pontos para vencer imediatamente
+        if (score >= 10) {
+            phraseEl.textContent = "Você ganhou o Cinebum!";
+            hintEl.textContent = "";
+            inputArea.style.display = 'none';
+            feedbackEl.innerHTML = `
+                <p style="color: gold; margin-bottom: 20px;">Você atingiu ${score} pontos! 🎉</p>
+                <button class="botao-navegacao" onclick="location.href='premio_cinebum.html'">Pegar Prêmio</button>
+            `;
+            return;
+        }
+
+        if (currentLevel >= questions.length) {
+            phraseEl.textContent = "Fim do Jogo! Você conhece muito bem os filmes! 🍿";
+            hintEl.textContent = "";
+            inputArea.style.display = 'none';
+            feedbackEl.textContent = `Você fez ${score} de ${questions.length} pontos! 🎉`;
+            feedbackEl.style.color = 'gold';
+            return;
+        }
+        
+        const q = questions[currentLevel];
+        phraseEl.textContent = `"${q.phrase}"`;
+        hintEl.textContent = `Dica: ${q.hint}`;
+        hintEl.style.display = 'none'; // Esconde a dica inicialmente
+        feedbackEl.textContent = "";
+        inputEl.value = "";
+        inputEl.disabled = false;
+        inputEl.focus();
+        levelEl.textContent = `Pergunta ${currentLevel + 1} de ${questions.length}`;
+    }
+
+    function showHint() {
+        hintEl.style.display = 'block';
+    }
+
+    function checkAnswer() {
+        const userChoice = inputEl.value.trim();
+        const correctAnswer = questions[currentLevel].answer;
+        
+        if (!userChoice) return;
+
+        // Normaliza para comparação (remove acentos e coloca em minúsculas)
+        const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        
+        const normUser = normalize(userChoice);
+        const normCorrect = normalize(correctAnswer);
+
+        // Verifica se a resposta está correta (aceita se o usuário digitar parte do nome se for longo)
+        let isCorrect = normCorrect === normUser;
+        if (!isCorrect && normCorrect.length > 10 && normUser.length > 4 && normCorrect.includes(normUser)) {
+            isCorrect = true;
+        }
+
+        if (isCorrect) {
+            score++;
+            scoreEl.textContent = `Pontos: ${score} / ${questions.length}`;
+            feedbackEl.style.color = '#4caf50';
+            feedbackEl.textContent = `Acertou! Era: ${correctAnswer} 🎬`;
+            inputEl.disabled = true;
+        } else {
+            feedbackEl.style.color = '#f44336';
+            feedbackEl.textContent = `Errou! A resposta certa era: ${correctAnswer}`;
+            inputEl.disabled = true;
+        }
+
+        setTimeout(() => {
+            currentLevel++;
+            loadLevel();
+        }, 2500);
+    }
+
+    // Permite usar o Enter para responder
+    inputEl.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    loadLevel();
+</script>
+<script src="neve.js"></script>
+<script src="theme.js"></script>
+</body>
+</html>

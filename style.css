@@ -1,0 +1,741 @@
+@import url("https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;  
+  background-position: center; /* Centraliza a imagem */
+  background-repeat: no-repeat; /* Evita que a imagem se repita */
+  background-attachment: fixed; /* Mantém a imagem fixa durante a rolagem */
+  background-color: #ADD8E6; /* Cor de fundo azul claro */
+  overflow-y: auto;
+}
+
+#conteudo, h2 {
+  text-align: center;
+  font-size: 4em;
+  color: white;
+  font-family: "Mountains of Christmas", serif;
+  margin-top: 20px;
+  z-index: 20;
+}
+
+.fa-snowflake {
+  position: absolute;
+  color: #fff;
+  opacity: 0.5;
+  font-size: 1em;
+  animation: fall linear infinite;
+  top: -20px; /* Inicia acima da tela */
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0vh);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.star {
+  color: rgb(233, 233, 96);
+  font-size: 30px;
+  text-shadow: 0 0 15px rgb(233, 233, 96);
+  animation: rotate-star 2.4s linear infinite;
+  animation-delay: calc(var(--i) * -1s);
+}
+
+@keyframes rotate-star {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.candycane {
+  color: rgb(204, 17, 17);
+  font-size: 30px;
+  position: absolute;
+  text-shadow: 0 0 15px rgb(233, 96, 96);
+  animation: animateCandyColor 7.2s linear infinite;
+  z-index: 10;
+  animation: rotate-candycanes 2.4s linear infinite;
+  animation-delay: calc(var(--i) * -1s);
+}
+
+@keyframes rotate-candycanes {
+  0% {
+    transform: rotate(0deg) scale(0);
+  }
+  50% {
+    transform: rotate(180deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(0);
+  }
+}
+
+@keyframes animateCandyColor {
+  0% {
+    color: hsl(0, 100%, 50%);
+  }
+  25% {
+    color: hsl(0, 100%, 65%);
+  }
+  50% {
+    color: hsl(0, 100%, 75%);
+  }
+  75% {
+    color: hsl(0, 100%, 65%);
+  }
+  100% {
+    color: hsl(0, 100%, 50%);
+  }
+}
+
+/* top of tree  */
+.candycane:nth-of-type(1) {
+  top: 35px;
+  left: 75px;
+}
+.candycane:nth-of-type(2) {
+  top: 85px;
+  left: 100px;
+}
+.candycane:nth-of-type(3) {
+  top: 95px;
+  left: 45px;
+}
+
+/* middle of tree  */
+.candycane:nth-of-type(4) {
+  top: 135px;
+  left: 70px;
+}
+.candycane:nth-of-type(5) {
+  top: 175px;
+  left: 110px;
+}
+.candycane:nth-of-type(6) {
+  top: 175px;
+  left: 40px;
+}
+
+/* bottom of tree  */
+.candycane:nth-of-type(7) {
+  top: 210px;
+  left: 70px;
+}
+.candycane:nth-of-type(8) {
+  top: 260px;
+  left: 120px;
+}
+.candycane:nth-of-type(9) {
+  top: 263px;
+  left: 20px;
+}
+
+@keyframes animateTreeColor {
+  0% {
+    border-bottom-color: hsl(120, 96%, 11%);
+  }
+  25% {
+    border-bottom-color: hsl(120, 98%, 22%);
+  }
+  50% {
+    border-bottom-color: hsl(120, 80%, 56%);
+  }
+  75% {
+    border-bottom-color: hsl(120, 98%, 22%);
+  }
+  100% {
+    border-bottom-color: hsl(120, 96%, 11%);
+  }
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 70px solid rgb(4, 79, 4);
+  position: relative;
+  border-radius: 15px;
+  z-index: 1;
+  animation: animateTreeColor 7.2s linear infinite;
+}
+
+.triangle-1 {
+  border-left-width: 50px;
+  border-right-width: 50px;
+  border-bottom-width: 100px;
+  margin-bottom: -60px;
+}
+
+.triangle-2 {
+  border-left-width: 70px;
+  border-right-width: 70px;
+  border-bottom-width: 140px;
+  margin-bottom: -90px;
+}
+
+.triangle-3 {
+  border-left-width: 90px;
+  border-right-width: 90px;
+  border-bottom-width: 180px;
+  margin-bottom: -30px;
+}
+
+.trunk {
+  width: 20px;
+  height: 40px;
+  background-color: #8b4513;
+  position: relative;
+  margin-top: 30px;
+  border-radius: 3px;
+}
+
+.ornament {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgb(78, 121, 196);
+  background: radial-gradient(
+    circle closest-side at center,
+    white 10%,
+    rgb(0, 174, 255) 70%
+  );
+  z-index: 14;
+  animation: float 3s infinite ease-in-out;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px);
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* tree ornaments area 1  */
+.ornament:nth-of-type(10) {
+  top: 20%;
+  left: 50%;
+}
+.ornament:nth-of-type(11) {
+  top: 37%;
+  left: 17%;
+}
+.ornament:nth-of-type(12) {
+  top: 37%;
+  left: 73%;
+}
+/* tree ornaments area 2  */
+.ornament:nth-of-type(13) {
+  top: 50%;
+  left: 40%;
+}
+.ornament:nth-of-type(14) {
+  top: 60%;
+  left: 8%;
+}
+.ornament:nth-of-type(15) {
+  top: 60%;
+  left: 83%;
+}
+
+/* tree ornaments area 3  */
+.ornament:nth-of-type(16) {
+  top: 75%;
+  left: 55%;
+}
+.ornament:nth-of-type(17) {
+  top: 85%;
+  left: -2%;
+}
+.ornament:nth-of-type(18) {
+  top: 85%;
+  left: 95%;
+}
+
+.botao-navegacao {
+    padding: 15px 25px;
+    background: #c00;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    animation: pulsar 1.5s infinite alternate;
+}
+
+/* Ajuste para o botão único na página inicial */
+#botao {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes pulsar {
+    from { transform: scale(1); box-shadow: 0 0 10px #c00; }
+    to { transform: scale(1.1); box-shadow: 0 0 25px #c00; }
+}
+
+/* Container para os botões nas páginas com mais de um */
+.botoes-container {
+    display: flex;
+    gap: 20px; /* Espaço entre os botões */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+/* Permite a animação de gradientes */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.caixa {
+    width: 80%; /* Aumentei a largura */
+    max-width: 800px;
+    min-height: 300px; /* Altura mínima para a caixa */
+    margin: 60px auto 140px auto;
+    padding: 40px; /* Espaçamento interno para o texto */
+    border-radius: 15px;
+    position: relative;
+    z-index: 10;
+    background: radial-gradient(circle, #1a2a1a, #000); /* Fundo verde escuro sutil */
+    /* Estilos para deixar o texto mais natalino */
+    display: flex;
+    justify-content: center; /* Centraliza o texto horizontalmente */
+    align-items: center; /* Centraliza o texto verticalmente */
+    font-family: "Mountains of Christmas", serif;
+    font-size: 2em;
+    color: #fff;
+    text-shadow: 0 0 8px gold; /* Adiciona um brilho dourado ao texto */
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Sombra vermelha natalina */
+}
+
+/* Adiciona um elemento interno para criar o fundo escuro, revelando a borda */
+/* A animação de borda foi removida para unificar o estilo */
+
+
+/* --- Estilos para a Página de Vídeo (pagina3.html) --- */
+
+.video-container {
+    position: relative;
+    width: 90%; /* Ocupa 90% da largura da página */
+    max-width: 1920px; /* Limite máximo de largura */
+    overflow: hidden;
+    padding-top: 50.625%; /* Proporção 16:9 (9 / 16 * 90%) */
+    border-radius: 15px; /* Bordas arredondadas */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); /* Sombra vermelha natalina */
+}
+
+.video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    border: 0;
+}
+
+/* --- Ícone de Presente Escondido --- */
+
+.hidden-icon {
+    font-size: 2.2em; /* Tamanho igual aos outros presentes */
+    color: gold;
+    opacity: 0.4; /* Deixa o ícone semi-transparente */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    z-index: 15;
+}
+
+.hidden-icon:hover {
+    opacity: 1; /* Totalmente visível */
+    transform: scale(1.1); /* Aumenta um pouco de tamanho */
+}
+
+/* --- Botão de Tema Escuro --- */
+.theme-toggle-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #fff;
+    color: #222;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- Estilos do Modo Escuro --- */
+body.dark-mode {
+    background-color: #0d1117; /* Fundo escuro (cor do GitHub) */
+}
+
+body.dark-mode .theme-toggle-button {
+    background: #333;
+    color: #fff;
+}
+
+body.dark-mode #conteudo, body.dark-mode h2 {
+    color: #c9d1d9;
+}
+
+body.dark-mode .caixa {
+    background: radial-gradient(circle, #212121, #000);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.5); /* Sombra azul */
+}
+
+/* --- Presentes com Mecânica Secreta --- */
+.presents-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px; /* Espaço entre os ícones */
+    position: relative;
+    top: -5px; /* Ajuste final da altura do grupo de presentes */
+    z-index: 5;
+}
+
+.wrong-place-trigger {
+    font-size: 2.2em; /* Tamanho dos ícones */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.wrong-place-trigger:hover {
+    transform: scale(1.15);
+}
+
+/* Cores diferentes para cada presente "errado" */
+.wrong-present-1 { color: #e74c3c; } /* Vermelho */
+.wrong-present-2 { color: #2980b9; } /* Azul */
+.wrong-present-3 { color: #27ae60; } /* Verde */
+
+
+/* Estilo para as bolinhas "erradas" na árvore */
+.ornament-wrong {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, white 10%, #e74c3c 70%); /* Cor vermelha */
+    box-shadow: 0 0 15px #e74c3c;
+    z-index: 14;
+    animation: float 3.2s infinite ease-in-out; /* Animação um pouco diferente para destacar */
+}
+
+/* Container para os presentes espalhados em outras páginas */
+.scattered-presents .wrong-place-trigger {
+    position: fixed; /* Posição fixa na tela */
+}
+
+/* --- Caixa de Mensagem Escondida --- */
+.hidden-message-box {
+    display: none; /* Começa escondida */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2c3e50;
+    color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    text-align: center;
+    font-family: "Mountains of Christmas", serif;
+    font-size: 2em;
+}
+
+.hidden-message-box.show {
+    display: block; /* Mostra a caixa */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* --- Estilos para a Central de Jogos (pagina3.html) --- */
+
+.games-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* Espaço entre os cards */
+    flex-wrap: wrap; /* Permite que os cards quebrem a linha em telas menores */
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.game-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 30px;
+    width: 300px;
+    height: 250px;
+    text-align: center;
+    color: white;
+    font-family: "Mountains of Christmas", serif;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.5);
+}
+
+.game-card i {
+    font-size: 4.5em; /* Aumenta o tamanho do ícone para maior destaque */
+    margin-bottom: 15px;
+    color: gold;
+}
+
+/* --- Estilos para o Jogo Quebra-Cabeça (jogo_quebra_cabeca.html) --- */
+
+#fugitive-image {
+    position: absolute;
+    width: 150px; /* Tamanho da imagem */
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: top 0.3s ease-out, left 0.3s ease-out; /* Animação suave */
+    z-index: 50;
+}
+
+/* --- Estilo para a letra secreta no título do jogo --- */
+#secret-letter-button {
+    color: #c00; /* Vermelho, para combinar com o tema */
+    text-shadow: 0 0 8px red;
+    cursor: pointer;
+    transition: text-shadow 0.3s ease;
+}
+
+#secret-letter-button:hover {
+    text-shadow: 0 0 15px yellow; /* Brilha em amarelo ao passar o mouse */
+}
+
+/* --- Estilo para o título do jogo (para dificultar) --- */
+.game-title {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8em; /* Fonte menor para ser mais sutil */
+    opacity: 0.6; /* Menos visível */
+    margin-top: 0;
+    width: 100%;
+}
+
+.decoy-letter {
+    color: #c00; /* Vermelho, para combinar com o tema */
+    text-shadow: 0 0 8px red;
+}
+
+/* --- Estilos para o Jogo "Fuja do Grinch" (jogo_grinch.html) --- */
+
+#game-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#player {
+    position: absolute;
+    width: 100px; /* Tamanho do jogador */
+    height: auto;    
+    user-select: none; /* Impede que a imagem seja selecionada/arrastada como texto */
+    z-index: 100;
+    /* A transição foi removida para o movimento ser controlado pelo mouse */
+}
+
+/* Efeito visual quando o jogador é atingido */
+#player.hit {
+    opacity: 0.5;
+    animation: blink 0.2s infinite alternate;
+}
+
+.enemy {
+    position: absolute;
+    font-size: 50px; /* Tamanho do inimigo */
+    color: #ecf0f1; /* Cor branca para o boneco de neve */
+    text-shadow: 0 0 15px #ecf0f1;
+    user-select: none;
+    z-index: 99;
+    /* A transição foi removida para o movimento ser controlado pelo JS */
+}
+
+#game-hud {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#lives-container {
+    display: flex;
+    gap: 10px;
+}
+
+#lives-container .fa-heart {
+    font-size: 2em;
+    color: #e74c3c;
+    text-shadow: 0 0 8px #e74c3c;
+    animation: beat 1.2s infinite ease-in-out;
+}
+
+#timer-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-family: "Mountains of Christmas", serif;
+    font-size: 2em;
+}
+
+#timer-container .fa-clock {
+    color: #3498db;
+}
+
+@keyframes beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes blink {
+    from { opacity: 0.4; }
+    to { opacity: 0.8; }
+}
+
+/* --- Estilos para o Jogo "Adivinhe a Música" (jogo_musica.html) --- */
+
+.music-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 40px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    z-index: 50;
+}
+
+.game-instruction {
+    font-family: "Mountains of Christmas", serif;
+    font-size: 2em;
+    color: white;
+    text-shadow: 0 0 5px gold;
+    text-align: center;
+}
+
+.guess-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+#guess-input {
+    width: 80%;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    font-size: 1.2em;
+    text-align: center;
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: sans-serif;
+}
+
+.guess-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+#score-container {
+    font-family: "Mountains of Christmas", serif;
+    font-size: 2.5em;
+    color: white;
+    text-shadow: 0 0 8px gold;
+    margin-bottom: 10px;
+}
