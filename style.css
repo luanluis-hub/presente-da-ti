@@ -380,7 +380,7 @@ body {
 
 .hidden-icon {
     font-size: 2.2em; /* Tamanho igual aos outros presentes */
-    color: gold;
+    color: rgba(0, 191, 255, 0.5); /* Altere 'gold' para a cor desejada (ex: red, #ff0000, blue) */
     opacity: 0.4; /* Deixa o ícone semi-transparente */
     cursor: pointer;
     transition: all 0.3s ease-in-out;
