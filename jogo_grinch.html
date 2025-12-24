@@ -21,7 +21,7 @@
     </div>
     <div id="timer-container">
         <i class="fas fa-clock"></i>
-        <span id="timer">01:00</span>
+        <span id="timer">00:30</span>
     </div>
 </div>
 
@@ -52,7 +52,7 @@
     const timerDisplay = document.getElementById('timer');
 
     let lives = 3;
-    let timeLeft = 60;
+    let timeLeft = 30;
     let isInvincible = false;
     let gameActive = true;
 
@@ -83,9 +83,9 @@
         enemy.style.top = '-50px';
 
         // A velocidade aumenta conforme o tempo diminui
-        const timeProgress = (60 - timeLeft) / 60; // Vai de 0 a 1
-        const minSpeed = 4.5 + (timeProgress * 6.75); // Velocidade mínima começa em 4.5 e vai até 11.25
-        const maxSpeed = 9 + (timeProgress * 9); // Velocidade máxima começa em 9 e vai até 18
+        const timeProgress = (30 - timeLeft) / 30; // Vai de 0 a 1
+        const minSpeed = 4 + (timeProgress * 6); // Velocidade inicial reduzida e progressão ajustada
+        const maxSpeed = 8 + (timeProgress * 8); 
         const speed = Math.random() * (maxSpeed - minSpeed) + minSpeed;
 
         enemies.push({ element: enemy, speed: speed });
@@ -192,9 +192,9 @@
             winGame();
         } else {
             // Aumenta a frequência de inimigos com o tempo
-            const baseInterval = 178; // Era 267ms
-            const timeProgress = (60 - timeLeft) / 60;
-            const newInterval = baseInterval - (timeProgress * 143); // Intervalo diminui de ~178ms para ~35ms
+            const baseInterval = 250; // Começa mais lento (era 178ms)
+            const timeProgress = (30 - timeLeft) / 30;
+            const newInterval = baseInterval - (timeProgress * 200); // Acelera até 50ms no final
 
             clearInterval(enemySpawnInterval);
             enemySpawnInterval = setInterval(spawnEnemy, newInterval);
@@ -215,7 +215,7 @@
         player.style.top = '50%';
         player.style.transform = 'translate(-50%, -50%)';
 
-        enemySpawnInterval = setInterval(spawnEnemy, 178); // Gera um inimigo a cada ~178ms (50% mais rápido novamente)
+        enemySpawnInterval = setInterval(spawnEnemy, 250); // Início ajustado para 250ms
         timerInterval = setInterval(updateTimer, 1000);
         requestAnimationFrame(gameLoop);
     }
